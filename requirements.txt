@@ -4,3 +4,6 @@ pandas
 openai
 python-dotenv
 gunicorn
+Flask
+gunicorn
+requests
