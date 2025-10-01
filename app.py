@@ -7,6 +7,7 @@ import os
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 
+
 app = Flask(__name__)
 CORS(app)  # 👈 allow all origins (React frontend can connect)
 
@@ -18,12 +19,22 @@ OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODEL_NAME = "openai/gpt-4o"  # you can change model if needed
 
 # -------------------- MySQL Setup -------------------- #
-DB_USER = "root"
-DB_PASS = "Root123."
-DB_HOST = "localhost"
-DB_NAME = "ai_data_agent"
+# DB_USER = "root"
+# DB_PASS = "Root123."
+# DB_HOST = "localhost"
+# DB_NAME = "ai_data_agent"
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASS = os.getenv("DB_PASS", "Root123.")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "ai_data_agent")
+
 
 engine = create_engine(f"mysql+mysqlconnector://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}")
+
+
+@app.route("/")
+def home():
+    return {"message": "Backend is running ✅"}
 
 
 # -------------------- OpenRouter Query -------------------- #
@@ -131,10 +142,9 @@ Return ONLY the SQL query (no explanation) and use the table name '{table_name}'
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/")
-def home():
-    return {"message": "Backend running on Render 🚀"}
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
 
